@@ -5,6 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>VR Geoguessr</title>
+
+    <link rel="icon" type="image/x-icon" href="./images/favicon.png">
     <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
     <script src="./components/sky.js"></script>
     <script src="./components/question_panel.js"></script>
@@ -12,11 +14,12 @@
 
 <body>
     <a-scene>
-        <a-assets>
-            <img id="eiffel_close" src="./images/eiffel_close.jpg">
-        </a-assets>
         <a-sky background-image></a-sky>
-        <a-box position="0 1.5 -3" question-panel></a-box>
+        <!-- MULTIPLE CHOICE QUESTION PANEL -->
+        <a-entity question-panel>
+            <a-box position="0 1.5 -3"></a-box>
+            <a-box position="0 0 -3"></a-box>
+        </a-entity>
 
         <a-camera>
             <a-cursor></a-cursor>
