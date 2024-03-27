@@ -7,6 +7,7 @@
     <title>VR Geoguessr</title>
     <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
     <script src="./components/sky.js"></script>
+    <script src="./components/question_panel.js"></script>
 </head>
 
 <body>
@@ -14,12 +15,11 @@
         <a-assets>
             <img id="eiffel_close" src="./images/eiffel_close.jpg">
         </a-assets>
-        <a-sky src="#eiffel_close"></a-sky>
-        <a-entity background-image></a-entity>
+        <a-sky background-image></a-sky>
+        <a-box position="0 1.5 -3" question-panel></a-box>
 
         <a-camera>
             <a-cursor></a-cursor>
-
             <a-entity text="value: TIMER PLACEHOLDER; align:center" position="0 0 -1"></a-entity>
         </a-camera>
     </a-scene>

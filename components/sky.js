@@ -21,5 +21,10 @@ AFRAME.registerComponent("background-image", {
         document.querySelector("a-sky").setAttribute("src", path);
       }
     }
+
+    // listen for click on question panel component
+    this.el.sceneEl.addEventListener("answer", () => {
+      console.log("RECEIVED");
+    });
   },
 });
