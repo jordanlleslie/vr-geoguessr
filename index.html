@@ -14,12 +14,8 @@
 <body>
     <a-scene>
         <a-assets>
-            <!-- <a-mixin id="object-hovered"
-                animation__mouseenter="property: scale; to: 1.2 1.2 1.2; dur: 300; startEvents: mouseenter"
-                animation__mouseleave="property: scale; to: 1 1 1; dur: 300; startEvents: mouseleave"
-                ></a-mixin> -->
             <a-mixin id="object-hovered"></a-mixin>
-            <a-mixin id="darkPurple" color="#905aa3"></a-mixin>
+            <a-mixin id="darkPurple" material="color: #905aa3"></a-mixin>
             <a-mixin id="clickable"
                 animation__position="property: object3D.position.y; to: 1.2; dir: alternate; dur: 2000; loop: true"></a-mixin>
         </a-assets>
@@ -41,18 +37,16 @@
 
         </a-entity>
         <a-entity mixin="clickable" position="0 1 -2">
-            <a-box mixin="object-hovered" color="#c1b7c4" depth="0.5" height="3" width="8"
-                position="0 1.5 -0.5"></a-box>
-            <a-cylinder mixin="object-hovered" color="#c1b7c4" radius="0.5" height="2" position="0 -1 -1"></a-cylinder>
+            <a-box color="#c1b7c4" depth="0.5" height="3" width="8" position="0 1.5 -0.35"></a-box>
+            <a-cylinder mixin="object-hovered" color="#61563f" radius="0.5" height="1.5"
+                position="0 -0.5 -1"></a-cylinder>
             <a-entity mixin="object-hovered" position="-2 1 0">
-                <a-box color="#905aa3" depth="0.5" height="0.75" width="3"></a-box>
+                <a-box mixin="darkPurple" depth="0.5" height="0.75" width="3"></a-box>
                 <a-entity text="value: France; color: #fff" position="1.5 0 1" scale="4 4 4"></a-entity>
             </a-entity>
-            <a-box mixin="object-hovered" color="#905aa3" depth="0.5" height="0.75" width="3"
-                position="-2 2.25 0"></a-box>
-            <a-box mixin="object-hovered" color="#905aa3" depth="0.5" height="0.75" width="3" position="2 1 0"></a-box>
-            <a-box mixin="object-hovered" color="#905aa3" depth="0.5" height="0.75" width="3"
-                position="2 2.25 0"></a-box>
+            <a-box mixin="object-hovered darkPurple" depth="0.5" height="0.75" width="3" position="-2 2.25 0"></a-box>
+            <a-box mixin="object-hovered darkPurple" depth="0.5" height="0.75" width="3" position="2 1 0"></a-box>
+            <a-box mixin="object-hovered darkPurple" depth="0.5" height="0.75" width="3" position="2 2.25 0"></a-box>
         </a-entity>
 
         <a-entity position="0 1 0">
