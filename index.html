@@ -4,27 +4,72 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VR Geoguessr</title>
+    <title>VR GeoGuessr</title>
 
     <link rel="icon" type="image/x-icon" href="./images/favicon.png">
     <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
-    <script src="./components/sky.js"></script>
-    <script src="./components/question_panel.js"></script>
+
 </head>
 
 <body>
     <a-scene>
-        <a-sky background-image></a-sky>
-        <!-- MULTIPLE CHOICE QUESTION PANEL -->
-        <a-entity question-panel>
-            <a-box position="0 1.5 -3"></a-box>
-            <a-box position="0 0 -3"></a-box>
+        <a-assets>
+            <!-- <a-mixin id="object-hovered"
+                animation__mouseenter="property: scale; to: 1.2 1.2 1.2; dur: 300; startEvents: mouseenter"
+                animation__mouseleave="property: scale; to: 1 1 1; dur: 300; startEvents: mouseleave"
+                ></a-mixin> -->
+            <a-mixin id="object-hovered"></a-mixin>
+            <a-mixin id="darkPurple" color="#905aa3"></a-mixin>
+            <a-mixin id="clickable"
+                animation__position="property: object3D.position.y; to: 1.2; dir: alternate; dur: 2000; loop: true"></a-mixin>
+        </a-assets>
+
+        <a-entity position=" 0 2.2 4">
+            <a-entity camera look-controls>
+                <!-- <a-entity
+                    animation__click="property: scale; startEvents: click; easing: easeInCubic; dur: 150; from: 0.1 0.1 0.1; to: 1 1 1"
+                    animation__fusing="property: scale; startEvents: fusing; easing: easeInCubic; dur: 1500; from: 1 1 1; to: 0.1 0.1 0.1"
+                    animation__mouseleave="property: scale; startEvents: mouseleave; easing: easeInCubic; dur: 500; to: 1 1 1"
+                    cursor="fuse: true;" material="color: black; shader: flat" position="0 0 -3"
+                    geometry="primitive: ring; radiusInner: 0.1; radiusOuter: 0.15;"></a-entity>
+                <a-animation begin="click" easing="ease-in" attribute="scale" fill="forwards" from="0.2 0.2 0.2"
+                    to="1 1 1" dur="150"></a-animation>
+                <a-animation begin="fusing" easing="ease-in" attribute="scale" fill="backwards" from="1 1 1"
+                    to="0.2 0.2 0.2" dur="1500"></a-animation> -->
+            </a-entity>
         </a-entity>
 
-        <a-camera>
-            <a-cursor raycaster="objects: a-box"></a-cursor>
-            <a-entity text="value: TIMER PLACEHOLDER; align:center" position="0 0 -1"></a-entity>
-        </a-camera>
+        </a-entity>
+        <a-entity mixin="clickable" position="0 1 -2">
+            <a-box mixin="object-hovered" color="#c1b7c4" depth="0.5" height="3" width="8"
+                position="0 1.5 -0.5"></a-box>
+            <a-cylinder mixin="object-hovered" color="#c1b7c4" radius="0.5" height="2" position="0 -1 -1"></a-cylinder>
+            <a-entity mixin="object-hovered" position="-2 1 0">
+                <a-box color="#905aa3" depth="0.5" height="0.75" width="3"></a-box>
+                <a-entity text="value: France; color: #fff" position="1.5 0 1" scale="4 4 4"></a-entity>
+            </a-entity>
+            <a-box mixin="object-hovered" color="#905aa3" depth="0.5" height="0.75" width="3"
+                position="-2 2.25 0"></a-box>
+            <a-box mixin="object-hovered" color="#905aa3" depth="0.5" height="0.75" width="3" position="2 1 0"></a-box>
+            <a-box mixin="object-hovered" color="#905aa3" depth="0.5" height="0.75" width="3"
+                position="2 2.25 0"></a-box>
+        </a-entity>
+
+        <a-entity position="0 1 0">
+            <a-entity mixin="cube green">
+                <a-animation begin="click" attribute="rotation" to="0 360 0" easing="linear" dur="2000"
+                    fill="backwards"></a-animation>
+            </a-entity>
+        </a-entity>
+
+        <a-entity position="3.5 1 0" rotation="0 45 0">
+            <a-entity mixin="cube blue">
+                <a-animation begin="click" fill="forwards" repeat="1" direction="alternate" attribute="position"
+                    from="0 0 0" to="15 0 0" dur="2000"></a-animation>
+            </a-entity>
+        </a-entity>
+
+        <a-entity position="0 3 0" class="clickable" mixin="cube yellow" rotation="0 45 0" scale=".5 .5 .5"></a-entity>
     </a-scene>
 
 </body>
