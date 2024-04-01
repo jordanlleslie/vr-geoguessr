@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+</head>
+<body>
+
+<a-scene>
+  <a-sky id="sky" src="images/eiffel_close.jpg"></a-sky>
+  <a-text id="notification" position="0 2.5 -5" align="center" value="" color="#FF0000" visible="false"></a-text>
+
+  <a-camera>
+    <a-cursor color="white" raycaster="objects: .clickable"></a-cursor>
+  </a-camera>
+  <!--Sphere -->
+  <a-sphere id="button" class="clickable" position="0 1.25 -5" radius="1" color="#4CC3D9">
+    <a-text value="Guess" position="0 0 1.5" align="center" color="black"></a-text>
+  </a-sphere>
+
+  <!-- Menu Items -->
+  <a-entity id="menu" position="0 4.75 -5" visible="false">
+    <!-- Choice Buttons-->
+    <a-plane class="clickable choice-button" position="-3 -1 0" rotation="0 0 0" width="2.5" height="0.75" color="#FFF">
+      <a-text value="Choice 1" align="center" color="#000" position="0 0 0.1"></a-text>
+    </a-plane>
+    <a-plane class="clickable choice-button" position="0 -1 0" rotation="0 0 0" width="2.5" height="0.75" color="#FFF">
+      <a-text value="Choice 2" align="center" color="#000" position="0 0 0.1"></a-text>
+    </a-plane>
+    <a-plane class="clickable choice-button" position="3 -1 0" rotation="0 0 0" width="2.5" height="0.75" color="#FFF">
+      <a-text value="Choice 3" align="center" color="#000" position="0 0 0.1"></a-text>
+    </a-plane>
+
+    <!-- Next Button  -->
+    <a-plane id="nextButton" class="clickable" position="0 -2 0" rotation="0 0 0" width="2" height="0.5" color="#4CC3D9">
+      <a-text value="Next" align="center" color="#FFF" position="0 0 0.1"></a-text>
+    </a-plane>
+  </a-entity>
+
+<script>
+  var menu = document.querySelector('#menu');
+  var images = [
+    "images/eiffel_close.jpg",
+    "images/taj mahal.jpg",
+    "images/golden gate bridge.jpg",
+    "images/greatwall of china.jpg",
+    "images/pyramids at giza.jpg",
+    "images/statue of liberty.jpg",
+    "images/leaningpiza.jpg",
+    "images/parthenon.jpg",
+  ];
+  var correctAnswers = ["Paris, France", "Agra, India", "San Francisco, USA", "Beijing, China", "Giza, Egypt", "New York City, USA", "Pisa, Italy", "Athens, Greece"];
+  var userScore = 0;
+  var correctChoiceSelected = false;
+
+  var places_choices = [
+    [   "Rome, Italy",
+        "Paris, France",
+        "Cairo, Egypt"
+    ],
+    [   "Cairo, Egypt",
+        "Agra, India",
+        "Beijing, China"
+    ],
+    [
+        "San Francisco, USA",
+        "Sydney, Australia",
+        "Vancouver, Canada"
+    ],
+    [
+        "Beijing, China",
+        "Rome, Italy",
+        "Lima, Peru"
+    ],
+    [
+        "Mexico City, Mexico",
+        "Athens, Greece",
+        "Giza, Egypt"
+    ],
+    [   "Tokyo, Japan",
+        "New York City, USA",
+        "Paris, France"
+    ],
+    [
+        "Pisa, Italy",
+        "Barcelona, Spain",
+        "London, United Kingdom"
+    ],
+    [
+        "Athens, Greece",
+        "Istanbul, Turkey",
+        "Rome, Italy"
+    ]
+]
+var menuVisible = false; // Tracks the visibility state of the menu
+  var currentIndex = 0;
+  var sphere = document.querySelector('#button');
+  var nextButton = document.querySelector('#nextButton'); // Select the Next button
+  var notification = document.querySelector('#notification'); // Select the notification text element
+
+function updateChoices() {
+    if (places_choices[currentIndex]) {
+        document.querySelectorAll('.choice-button').forEach((element, index) => {
+            // Ensure the index is within the current choices array length
+            if (index < places_choices[currentIndex].length) {
+                element.querySelector('a-text').setAttribute('value', places_choices[currentIndex][index]);
+            }
+        });
+    }
+}
+
+function resetExperience() {
+    userScore = 0;
+    correctChoiceSelected = false; // Reset the correct choice flag
+    currentIndex = 0;
+    // Reset all choice buttons to their default color
+    document.querySelectorAll('.choice-button').forEach(function(button) {
+        button.setAttribute('color', 'white');
+    });
+
+    // Hide the menu and notification
+    menuVisible = false;
+    menu.setAttribute('visible', menuVisible);
+    notification.setAttribute('visible', false);
+
+    updateChoices(); // Refresh choices for the beginning
+    document.querySelector('#sky').setAttribute('src', images[currentIndex]); // Reset the sky's image to the first one
+    alert("Experience restarted. Good luck!");
+}
+
+function displayScoreAndRestart() {
+    alert("Your score: " + userScore + "/8. Starting over."); // Use fixed number of attempts
+    resetExperience();
+}
+
+// Update choices when the sphere (button) is clicked
+sphere.addEventListener('click', function () {
+    // Toggle and update choices only if the menu will be visible
+    menuVisible = !menuVisible;
+    if (menuVisible) {
+        updateChoices();
+    }
+
+    menu.setAttribute('visible', menuVisible);
+    sphere.setAttribute('color', menuVisible ? 'green' : '#4CC3D9');
+});
+
+nextButton.addEventListener('click', function () {
+    if (!menu.getAttribute('visible')) {
+      return; // Do nothing if the menu is not visible
+    }
+    if (correctChoiceSelected) {
+      userScore++; // Increment score only if the correct choice was made
+    }
+    correctChoiceSelected = false; // Reset the flag for the next question
+
+    currentIndex = (currentIndex + 1) % images.length;
+    if (currentIndex === 0) {
+      displayScoreAndRestart();
+    } else {
+      document.querySelector('#sky').setAttribute('src', images[currentIndex]);
+      document.querySelectorAll('.choice-button').forEach(function(button) {
+        button.setAttribute('color', 'white');
+      });
+      menuVisible = false;
+      menu.setAttribute('visible', menuVisible);
+      notification.setAttribute('visible', false); // Hide the notification for the next question
+      updateChoices();
+    }
+});
+
+nextButton.addEventListener('mouseenter', function () {
+    this.setAttribute('color', 'red'); // Change the button's color to red
+});
+
+nextButton.addEventListener('mouseleave', function () {
+    this.setAttribute('color', '#4CC3D9'); // Revert to the original color
+});
+
+document.addEventListener('DOMContentLoaded', function() {
+  document.querySelectorAll('.choice-button').forEach(function(button) {
+    button.addEventListener('click', function() {
+      var choice = this.querySelector('a-text').getAttribute('value');
+      correctChoiceSelected = choice === correctAnswers[currentIndex];
+
+      // Reset all buttons to their default color
+      document.querySelectorAll('.choice-button').forEach(function(btn) {
+          btn.setAttribute('color', 'white');
+      });
+
+      // Set the color of the clicked button to indicate selection
+      this.setAttribute('color', correctChoiceSelected ? 'green' : 'red');
+
+      if (correctChoiceSelected) {
+          // Display notification for correct choice
+          notification.setAttribute('value', 'Correct!');
+          notification.setAttribute('visible', true);
+          setTimeout(function() {
+              notification.setAttribute('visible', false);
+          }, 2000); // Hide after 2 seconds
+      }
+    });
+  });
+});
+
+</script>
+
+</body>
+</html>
