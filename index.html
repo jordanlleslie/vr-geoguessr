@@ -11,14 +11,14 @@
   <a-camera>
     <a-cursor color="white" raycaster="objects: .clickable"></a-cursor>
   </a-camera>
-<!-- Interactive Sphere/Button -->
+<!--Sphere -->
 <a-sphere id="button" class="clickable" position="0 1.25 -5" radius="1" color="#4CC3D9">
   <a-text value="Guess" position="0 0 1.5" align="center" color="black"></a-text>
 </a-sphere>
 
-  <!-- Menu Items (initially hidden) - Adjusted to appear above the sphere -->
+  <!-- Menu Items -->
   <a-entity id="menu" position="0 4.75 -5" visible="false">
-    <!-- Choice Buttons - Now larger and repositioned for better text fit and spacing -->
+    <!-- Choice Buttons-->
     <a-plane class="clickable choice-button" position="-3 -1 0" rotation="0 0 0" width="2.5" height="0.75" color="#FFF">
       <a-text value="Choice 1" align="center" color="#000" position="0 0 0.1"></a-text>
     </a-plane>
@@ -29,7 +29,7 @@
       <a-text value="Choice 3" align="center" color="#000" position="0 0 0.1"></a-text>
     </a-plane>
     
-    <!-- Next Button - Now part of the menu entity -->
+    <!-- Next Button  -->
     <a-plane id="nextButton" class="clickable" position="0 -2 0" rotation="0 0 0" width="2" height="0.5" color="#4CC3D9">
       <a-text value="Next" align="center" color="#FFF" position="0 0 0.1"></a-text>
     </a-plane>
