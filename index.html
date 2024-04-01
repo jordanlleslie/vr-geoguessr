@@ -1,32 +1,210 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VR Geoguessr</title>
-
-    <link rel="icon" type="image/x-icon" href="./images/favicon.png">
-    <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
-    <script src="./components/sky.js"></script>
-    <script src="./components/question_panel.js"></script>
+  <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
 </head>
-
 <body>
-    <a-scene>
-        <a-sky background-image></a-sky>
-        <!-- MULTIPLE CHOICE QUESTION PANEL -->
-        <a-entity question-panel>
-            <a-box position="0 1.5 -3"></a-box>
-            <a-box position="0 0 -3"></a-box>
-        </a-entity>
 
-        <a-camera>
-            <a-cursor raycaster="objects: a-box"></a-cursor>
-            <a-entity text="value: TIMER PLACEHOLDER; align:center" position="0 0 -1"></a-entity>
-        </a-camera>
-    </a-scene>
+<a-scene>
+  <a-sky id="sky" src="images/eiffel_close.jpg"></a-sky>
+
+  <a-camera>
+    <a-cursor color="white" raycaster="objects: .clickable"></a-cursor>
+  </a-camera>
+<!-- Interactive Sphere/Button -->
+<a-sphere id="button" class="clickable" position="0 1.25 -5" radius="1" color="#4CC3D9">
+  <a-text value="Guess" position="0 0 1.5" align="center" color="black"></a-text>
+</a-sphere>
+
+  <!-- Menu Items (initially hidden) - Adjusted to appear above the sphere -->
+  <a-entity id="menu" position="0 4.75 -5" visible="false">
+    <!-- Choice Buttons - Now larger and repositioned for better text fit and spacing -->
+    <a-plane class="clickable choice-button" position="-3 -1 0" rotation="0 0 0" width="2.5" height="0.75" color="#FFF">
+      <a-text value="Choice 1" align="center" color="#000" position="0 0 0.1"></a-text>
+    </a-plane>
+    <a-plane class="clickable choice-button" position="0 -1 0" rotation="0 0 0" width="2.5" height="0.75" color="#FFF">
+      <a-text value="Choice 2" align="center" color="#000" position="0 0 0.1"></a-text>
+    </a-plane>
+    <a-plane class="clickable choice-button" position="3 -1 0" rotation="0 0 0" width="2.5" height="0.75" color="#FFF">
+      <a-text value="Choice 3" align="center" color="#000" position="0 0 0.1"></a-text>
+    </a-plane>
+    
+    <!-- Next Button - Now part of the menu entity -->
+    <a-plane id="nextButton" class="clickable" position="0 -2 0" rotation="0 0 0" width="2" height="0.5" color="#4CC3D9">
+      <a-text value="Next" align="center" color="#FFF" position="0 0 0.1"></a-text>
+    </a-plane>
+  </a-entity>
+
+<script>
+  var menu = document.querySelector('#menu');
+  var images = [
+    "images/eiffel_close.jpg",
+    "images/taj mahal.jpg",
+    "images/golden gate bridge.jpg",
+    "images/greatwall of china.jpg",
+    "images/pyramids at giza.jpg",
+    "images/statue of liberty.jpg",
+    "images/leaningpiza.jpg",
+    "images/parthenon.jpg",
+  ];
+  var correctAnswers = ["Paris, France", "Agra, India", "San Francisco, USA", "Beijing, China", "Giza, Egypt", "New York City, USA", "Pisa, Italy", "Athens, Greece"];
+  var userScore = 0; // Variable to track the user's score
+  var correctChoiceSelected = false; // Flag to track if the correct choice has been made
+
+  var places_choices = [
+    [   "Rome, Italy",
+        "Paris, France",
+        "Cairo, Egypt"
+    ],
+    [   "Cairo, Egypt",
+        "Agra, India",
+        "Beijing, China"
+        
+    ],
+    [
+        "San Francisco, USA",
+        "Sydney, Australia",
+        "Vancouver, Canada"
+    ],
+    [
+        "Beijing, China",
+        "Rome, Italy",
+        "Lima, Peru"
+    ],
+    [
+       
+        "Mexico City, Mexico",
+        "Athens, Greece",
+        "Giza, Egypt"
+    ],
+    [   "Tokyo, Japan",
+        "New York City, USA",
+        "Paris, France"
+        
+    ],
+    [
+        "Pisa, Italy",
+        "Barcelona, Spain",
+        "London, United Kingdom"
+    ],
+    [
+        "Athens, Greece",
+        "Istanbul, Turkey",
+        "Rome, Italy"
+    ]
+]
+var menuVisible = false; // Tracks the visibility state of the menu
+  var currentIndex = 0;
+  var sphere = document.querySelector('#button');
+  var nextButton = document.querySelector('#nextButton'); // Select the Next button
+function updateChoices() {
+    if (places_choices[currentIndex]) {
+        document.querySelectorAll('.choice-button').forEach((element, index) => {
+            // Ensure the index is within the current choices array length
+            if (index < places_choices[currentIndex].length) {
+                element.querySelector('a-text').setAttribute('value', places_choices[currentIndex][index]);
+            }
+        });
+    }
+}
+
+function resetExperience() {
+    userScore = 0;
+    correctChoiceSelected = false; // Reset the correct choice flag
+    currentIndex = 0;
+    // Reset all choice buttons to their default color
+    document.querySelectorAll('.choice-button').forEach(function(button) {
+        button.setAttribute('color', 'white');
+    });
+    
+    // Hide the menu
+    menuVisible = false;
+    menu.setAttribute('visible', menuVisible);
+    
+    updateChoices(); // Refresh choices for the beginning
+    document.querySelector('#sky').setAttribute('src', images[currentIndex]); // Reset the sky's image to the first one
+    alert("Experience restarted. Good luck!");
+}
+
+function displayScoreAndRestart() {
+    alert("Your score: " + userScore + "/8. Starting over."); // Use fixed number of attempts
+    resetExperience();
+}
+
+
+// Update choices when the sphere (button) is clicked
+sphere.addEventListener('click', function () {
+    // Toggle and update choices only if the menu will be visible
+    menuVisible = !menuVisible;
+    if (menuVisible) {
+        updateChoices();
+    }
+  
+    menu.setAttribute('visible', menuVisible);
+    sphere.setAttribute('color', menuVisible ? 'green' : '#4CC3D9');
+});
+
+  nextButton.addEventListener('click', function () {
+    if (!menu.getAttribute('visible')) {
+      return; // Do nothing if the menu is not visible
+    }
+    if (correctChoiceSelected) {
+      userScore++; // Increment score only if the correct choice was made
+    }
+    correctChoiceSelected = false; // Reset the flag for the next question
+
+    currentIndex = (currentIndex + 1) % images.length;
+    if (currentIndex === 0) {
+      displayScoreAndRestart();
+    } else {
+      document.querySelector('#sky').setAttribute('src', images[currentIndex]);
+      document.querySelectorAll('.choice-button').forEach(function(button) {
+        button.setAttribute('color', 'white');
+      });
+      menuVisible = false;
+      menu.setAttribute('visible', menuVisible);
+      updateChoices();
+    }
+  });
+
+
+
+nextButton.addEventListener('mouseenter', function () {
+    this.setAttribute('color', 'red'); // Change the button's color to red
+});
+
+nextButton.addEventListener('mouseleave', function () {
+    this.setAttribute('color', '#4CC3D9'); // Revert to the original color
+});
+
+  document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.choice-button').forEach(function(button) {
+        button.addEventListener('click', function() {
+            var alreadySelected = this.getAttribute('color') === 'blue';
+            // Reset all buttons to their default color
+            document.querySelectorAll('.choice-button').forEach(function(btn) {
+                btn.setAttribute('color', 'white');
+            });
+
+            if (alreadySelected) {
+                // If the button was already selected, clicking it again deselects it
+                this.setAttribute('color', 'white');
+                correctChoiceSelected = false; // Deselecting means no correct choice is selected
+            } else {
+                // Set the color of the clicked button to indicate selection
+                this.setAttribute('color', 'blue');
+                var choice = this.querySelector('a-text').getAttribute('value');
+                // Update correctChoiceSelected based on the current selection
+                correctChoiceSelected = choice === correctAnswers[currentIndex];
+            }
+        });
+    });
+});
+
+
+</script>
 
 </body>
-
 </html>
+
+
